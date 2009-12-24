@@ -1,0 +1,31 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <adapter factory=".support.ObjectPermissionsMaps" />
+  <adapter factory=".support.ObjectPermissionsMapsManager" />
+
+  <class class=".support.ObjectPermissionsMaps">
+    <allow interface=".interfaces.IObjectPermissionsMaps" />
+  </class>
+
+  <adapter
+     name="zojax.permissionsmap"
+     factory=".manager.PermissionsMapManager" />
+
+  <class class=".permissionsmap.PermissionsMap">
+    <allow interface="zope.securitypolicy.interfaces.IRolePermissionMap" />
+  </class>
+
+  <!-- Registering documentation with API doc -->
+  <configure
+     xmlns:zcml="http://namespaces.zope.org/zcml"
+     xmlns:apidoc="http://namespaces.zope.org/apidoc"
+     zcml:condition="have apidoc">
+
+    <apidoc:bookchapter
+       id="zojax-permissionsmap"
+       title="zojax.permissionsmap - Permissions map"
+       doc_path="README.txt"
+       parent="zojax" />
+  </configure>
+
+</configure>

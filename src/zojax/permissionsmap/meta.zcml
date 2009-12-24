@@ -1,0 +1,39 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:meta="http://namespaces.zope.org/meta">
+
+  <meta:directives namespace="http://namespaces.zope.org/zope">
+
+    <meta:complexDirective
+       name="permissions"
+       schema=".zcml.IPermissionsMapDirective"
+       handler=".zcml.permissionsMapDirective">
+
+      <meta:subdirective 
+	 name="grant"
+	 schema=".zcml.IGrantDirective" />
+
+      <meta:subdirective
+	 name="deny"
+	 schema=".zcml.IDenyDirective" />
+
+      <meta:subdirective
+	 name="unset"
+	 schema=".zcml.IUnsetDirective" />
+
+      <meta:subdirective
+	 name="grantAll"
+	 schema=".zcml.IGrantAllDirective" />
+
+      <meta:subdirective
+	 name="denyAll"
+	 schema=".zcml.IDenyAllDirective" />
+
+      <meta:subdirective
+	 name="unsetAll"
+	 schema=".zcml.IUnsetAllDirective" />
+    </meta:complexDirective>
+
+  </meta:directives>
+
+</configure>
