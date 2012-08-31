@@ -25,6 +25,7 @@ from zope.app.testing import setup
 from zope.securitypolicy.role import Role
 from zope.security.permission import Permission
 from zope.annotation.attribute import AttributeAnnotations
+from zope.location.location import Location
 
 from manager import PermissionsMapManager
 from support import ObjectPermissionsMaps, ObjectPermissionsMapsManager
@@ -33,6 +34,10 @@ from support import ObjectPermissionsMaps, ObjectPermissionsMapsManager
 r1 = Role('r1', 'Role1')
 r2 = Role('r2', 'Role2')
 r3 = Role('r3', 'Role3')
+
+r3 = Role('r4', 'Role4')
+r3 = Role('r5', 'Role5')
+r3 = Role('r6', 'Role6')
 
 p1 = Permission('my.p1')
 p2 = Permission('my.p2')
@@ -45,11 +50,33 @@ class ITestContent1(interface.Interface):
 class ITestContent2(interface.Interface):
     pass
 
-class TestContent1(object):
+
+class ITestContent3(interface.Interface):
+    pass
+
+class ITestContent4(interface.Interface):
+    pass
+
+class ITestContent5(interface.Interface):
+    pass
+
+class TestContent1(Location):
     interface.implements(ITestContent1)
 
-class TestContent2(object):
+class TestContent2(Location):
     interface.implements(ITestContent2)
+
+
+class TestContent3(Location):
+    interface.implements(ITestContent3)
+
+class TestContent4(Location):
+    interface.implements(ITestContent4)
+
+class TestContent5(Location):
+    interface.implements(ITestContent5)
+
+#class TestContent
 
 
 def setUp(test):

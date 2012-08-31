@@ -66,6 +66,7 @@ setup(name='zojax.permissionsmap',
                           ],
       extras_require = dict(test=['zope.app.testing',
                                   'zope.testing',
+                                  'zope.app.folder'
                                   ]),
       include_package_data = True,
       zip_safe = False

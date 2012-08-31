@@ -35,28 +35,65 @@ class PermissionsMapManager(object):
         if supp is not None:
             perms.extend(supp.get())
 
-        # then get adapted permissionsmap
         for name, permissions in getAdapters((context,), IPermissionsMap):
+        # then get adapted permissionsmap
             perms.append(permissions)
 
         self.perms = perms
 
+        # collect parents permissionsmaps
+        parent_perms = []
+        if hasattr(context, '__parent__'):
+            parent_context = context.__parent__
+        else:
+            parent_context = None
+
+        while ILocation.providedBy(parent_context) and parent_context is not None:
+            for name, permissions in getAdapters((parent_context,), IPermissionsMap):
+                if permissions not in parent_perms:
+                    parent_perms.append(permissions)
+            parent_context = parent_context.__parent__
+
+        self.parent_perms = parent_perms #tuple(reversed(parent_perms)) # Permissions are propagated in 'child -> parent' direction
+        #import pdb; pdb.set_trace()
+        #if hasattr(context, "title") and context.title == u'ORD-QA 9.0':
+        #    self.pdb =True
+        #else:
+        #    self.pdb = False
+
     def getPermissionsForRole(self, role_id):
         permissions = {}
+
         for perm in self.perms:
             for permission, setting in perm.getPermissionsForRole(role_id):
                 if permission not in permissions:
                     permissions[permission] = setting
 
+        for perm in self.parent_perms: # inherit roles from parents of context
+            for permission, setting in perm.getPermissionsForRole(role_id):
+                if permission not in permissions: # check for permission duplicates, do not override them
+                    permissions[permission] = setting
+
+        #if self.pdb:
+        #    import pdb; pdb.set_trace()
         return permissions.items()
 
     def getRolesForPermission(self, permission_id):
         """ check permissions in order """
         roles = {}
-        for perm in self.perms:
+
+        for perm in self.perms: # apply roles defined for current context
             for role, setting in perm.getRolesForPermission(permission_id):
                 if role not in roles:
                     roles[role] = setting
+
+        for perm in self.parent_perms: # inherit roles from parents of context
+            for role, setting in perm.getRolesForPermission(permission_id):
+                if role not in roles: # check for role duplicates,do not them
+                    roles[role] = setting
+
+        #if self.pdb:
+        #    import pdb; pdb.set_trace()
 
         return roles.items()
 
