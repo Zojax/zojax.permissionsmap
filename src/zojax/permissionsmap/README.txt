@@ -268,6 +268,7 @@ PermissionsMap permissions inheritance
   ...   </permissions>
   ...
   ...   <permissions name="myPermis3" for="zojax.permissionsmap.tests.TestContent4">
+  ...     <denyAll permission="my.p2" />
   ...     <grant permission="my.p3" role="r3" />
   ...   </permissions>
   ... </configure>""", context)
@@ -294,12 +295,8 @@ PermissionsMap permissions inheritance
   >>> interface.directlyProvides(tc4, IAttributeAnnotatable)
   >>> map4 = component.getAdapter(tc4, IRolePermissionMap, 'zojax.permissionsmap')
   >>> map4.getPermissionsForRole('r1')
-  [('my.p1', PermissionSetting: Allow)]
+  [('my.p1', PermissionSetting: Allow), ('my.p2', PermissionSetting: Deny)]
   >>> map4.getPermissionsForRole('r2')
-  [('my.p3', PermissionSetting: Allow), ('my.p2', PermissionSetting: Allow)]
-
-  >>> map4 = component.getAdapter(tc4, IRolePermissionMap, 'zojax.permissionsmap')
-  >>> map4.getPermissionsForRole('r1')
-  [('my.p1', PermissionSetting: Allow)]
+  [('my.p3', PermissionSetting: Allow), ('my.p2', PermissionSetting: Deny)]
   >>> map4.getPermissionsForRole('r3')
-  [('my.p3', PermissionSetting: Allow)]
+  [('my.p3', PermissionSetting: Allow), ('my.p2', PermissionSetting: Deny)]
