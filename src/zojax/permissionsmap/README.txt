@@ -256,64 +256,50 @@ getSetting and getRolesAndPermissions methods are not implemented
 
 PermissionsMap permissions inheritance
 --------------------------------------
+  >>> context = xmlconfig.string("""
+  ... <configure xmlns="http://namespaces.zope.org/zope">
+  ...   <permissions name="myPermis1" for="zojax.permissionsmap.tests.TestContent2">
+  ...     <grant permission="my.p1" role="r1" />
+  ...     <grant permission="my.p2" role="r2" />
+  ...   </permissions>
+  ...
+  ...   <permissions name="myPermis2" for="zojax.permissionsmap.tests.TestContent3">
+  ...     <grant permission="my.p3" role="r2" />
+  ...   </permissions>
+  ...
+  ...   <permissions name="myPermis3" for="zojax.permissionsmap.tests.TestContent4">
+  ...     <grant permission="my.p3" role="r3" />
+  ...   </permissions>
+  ... </configure>""", context)
 
-#  >>> from zope import interface, component
-#  >>> from zope.interface.verify import verifyObject#
+  >>> tc2 = tests.TestContent2()
+  >>> interface.directlyProvides(tc2, IAttributeAnnotatable)
+  >>> map2 = component.getAdapter(tc2, IRolePermissionMap, 'zojax.permissionsmap')
+  >>> map2.getPermissionsForRole('r1')
+  [('my.p1', PermissionSetting: Allow)]
+  >>> map2.getPermissionsForRole('r2')
+  [('my.p2', PermissionSetting: Allow)]
 
-#  >>> import zojax.permissionsmap
-#  >>> from zojax.permissionsmap import interfaces, tests
-#  >>> from zope.configuration import xmlconfig
+  >>> tc3 = tests.TestContent3()
+  >>> tc3.__parent__ = tc2
+  >>> interface.directlyProvides(tc3, IAttributeAnnotatable)
+  >>> map3 = component.getAdapter(tc3, IRolePermissionMap, 'zojax.permissionsmap')
+  >>> map3.getPermissionsForRole('r1')
+  [('my.p1', PermissionSetting: Allow)]
+  >>> map3.getPermissionsForRole('r2')
+  [('my.p3', PermissionSetting: Allow), ('my.p2', PermissionSetting: Allow)]
 
-#  >>> context = xmlconfig.file('meta.zcml', zojax.permissionsmap)
-   >>> from zojax.permissionsmap.manager import PermissionsMapManager
+  >>> tc4 = tests.TestContent4()
+  >>> tc4.__parent__ = tc3
+  >>> interface.directlyProvides(tc4, IAttributeAnnotatable)
+  >>> map4 = component.getAdapter(tc4, IRolePermissionMap, 'zojax.permissionsmap')
+  >>> map4.getPermissionsForRole('r1')
+  [('my.p1', PermissionSetting: Allow)]
+  >>> map4.getPermissionsForRole('r2')
+  [('my.p3', PermissionSetting: Allow), ('my.p2', PermissionSetting: Allow)]
 
-
-#  >>> xmlconfig._clearContext()
-
-
-
-#  >>> context = xmlconfig.string("""
-#  ... <configure xmlns="http://namespaces.zope.org/zope">
-
-#  ...   <permissions name="myPermissions1">
-#  ...     <grant permission="my.p2" role="r2" />
-#  ...   </permissions>
-#  ...
-#  ...   <permissions name="myPermissions2">
-#  ...     <grant permission="my.p3" role="r3" />
-#  ...   </permissions>
-#  ...
-#  ...   <permissions name="myPermissions3">
-#  ...
-#  ...     <grant permission="my.p3" role="r3" />
-#  ...   </permissions>
-#  ... </configure>""")
-
-
-#  >>> map = component.getAdapter(
-#  ...     content, IRolePermissionMap, 'zojax.permissionsmap')
-
-#  >>> tc1 = tests.TestContent1()
-#  >>> interface.directlyProvides(tc1, IAttributeAnnotatable)
-#  >>> objectmanager = interfaces.IObjectPermissionsMapsManager(tc1)
-#  >>> objectmanager.set(('myPermissions1',))
-
-#  >>> tc2 = tests.TestContent2()
-#  >>> tc2.__parent__ = tc1
-#  >>> interface.directlyProvides(tc2, IAttributeAnnotatable)
-#  >>> objectmanager = interfaces.IObjectPermissionsMapsManager(tc2)
-#  >>> objectmanager.set(('myPermissions2',))
-
-
-#  >>> content = tests.TestContent3()
-#  >>> interface.directlyProvides(content, IAttributeAnnotatable)
-#  >>> objectmanager = interfaces.IObjectPermissionsMapsManager(content)
-#  >>> objectmanager.set(('myPermissions3',))
-
-#  >>> content.__parent__ = tc2
-#  >>> perms = component.getAdapter(content, interfaces.IPermissionsMap, 'myPermissions3')
-
-#  >>> map3 = component.getAdapter(content, IRolePermissionMap, 'zojax.permissionsmap')
-#  >>> map2 = component.getAdapter(tc2, IRolePermissionMap, 'zojax.permissionsmap')
-#  >>> map1 = component.getAdapter(tc1, IRolePermissionMap, 'zojax.permissionsmap')
-
+  >>> map4 = component.getAdapter(tc4, IRolePermissionMap, 'zojax.permissionsmap')
+  >>> map4.getPermissionsForRole('r1')
+  [('my.p1', PermissionSetting: Allow)]
+  >>> map4.getPermissionsForRole('r3')
+  [('my.p3', PermissionSetting: Allow)]

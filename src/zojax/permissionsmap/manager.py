@@ -29,7 +29,6 @@ class PermissionsMapManager(object):
 
     def __init__(self, context):
         perms = []
-
         # first get object permissionsmap
         supp = IObjectPermissionsMaps(context, None)
         if supp is not None:
@@ -47,7 +46,6 @@ class PermissionsMapManager(object):
             parent_context = context.__parent__
         else:
             parent_context = None
-
         while ILocation.providedBy(parent_context) and parent_context is not None:
             for name, permissions in getAdapters((parent_context,), IPermissionsMap):
                 if permissions not in parent_perms:
@@ -55,11 +53,6 @@ class PermissionsMapManager(object):
             parent_context = parent_context.__parent__
 
         self.parent_perms = parent_perms #tuple(reversed(parent_perms)) # Permissions are propagated in 'child -> parent' direction
-        #import pdb; pdb.set_trace()
-        #if hasattr(context, "title") and context.title == u'ORD-QA 9.0':
-        #    self.pdb =True
-        #else:
-        #    self.pdb = False
 
     def getPermissionsForRole(self, role_id):
         permissions = {}
@@ -74,8 +67,6 @@ class PermissionsMapManager(object):
                 if permission not in permissions: # check for permission duplicates, do not override them
                     permissions[permission] = setting
 
-        #if self.pdb:
-        #    import pdb; pdb.set_trace()
         return permissions.items()
 
     def getRolesForPermission(self, permission_id):
@@ -91,9 +82,6 @@ class PermissionsMapManager(object):
             for role, setting in perm.getRolesForPermission(permission_id):
                 if role not in roles: # check for role duplicates,do not them
                     roles[role] = setting
-
-        #if self.pdb:
-        #    import pdb; pdb.set_trace()
 
         return roles.items()
 

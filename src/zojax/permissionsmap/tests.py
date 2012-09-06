@@ -35,10 +35,6 @@ r1 = Role('r1', 'Role1')
 r2 = Role('r2', 'Role2')
 r3 = Role('r3', 'Role3')
 
-r3 = Role('r4', 'Role4')
-r3 = Role('r5', 'Role5')
-r3 = Role('r6', 'Role6')
-
 p1 = Permission('my.p1')
 p2 = Permission('my.p2')
 p3 = Permission('my.p3')
